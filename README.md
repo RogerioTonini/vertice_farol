@@ -31,9 +31,13 @@ No final de cada tópico descrevo as diferenças (se houverem) de comandos utili
 > **Git do projeto** [ImensaoControlTower](https://github.com/lvgalvao/ImersaoControlTower)
 >
 > **Links das aulas**
+>
 > [IMERSÃO DATABRICKS + CLAUDE CODE: PIPELINE E INGESTÃO DE DADOS (AWS E API) | DIA 1](https://www.youtube.com/watch?v=4lC5t6fm2yE&pp=ygVNaU1FUlPDg08gREFUQUJSSUNLUyArIENMQVVERSBDT0RFOiBQSVBFTElORSBFIElOR0VTVMODTyBERSBEQURPUyAoQVdTIEUgQVBJKSA%3D)
+>
 > [IMERSÃO DATABRICKS + CLAUDE CODE: PIPELINE E INGESTÃO DE DADOS (AWS E API) | DIA 2](https://www.youtube.com/watch?v=jLUvmFgOtkk&t=862s&pp=ygVNaU1FUlPDg08gREFUQUJSSUNLUyArIENMQVVERSBDT0RFOiBQSVBFTElORSBFIElOR0VTVMODTyBERSBEQURPUyAoQVdTIEUgQVBJKSA%3D)
+>
 > [IMERSÃO DATABRICKS + CLAUDE CODE: PIPELINE E INGESTÃO DE DADOS (AWS E API) | DIA 3](https://www.youtube.com/watch?v=sKXrAoymLqM&pp=ygVNaU1FUlPDg08gREFUQUJSSUNLUyArIENMQVVERSBDT0RFOiBQSVBFTElORSBFIElOR0VTVMODTyBERSBEQURPUyAoQVdTIEUgQVBJKSA%3D)
+>
 > [IMERSÃO DATABRICKS + CLAUDE CODE: PIPELINE E INGESTÃO DE DADOS (AWS E API) | DIA 4](https://www.youtube.com/watch?v=ti_fjvwAF_8&pp=ygVNaU1FUlPDg08gREFUQUJSSUNLUyArIENMQVVERSBDT0RFOiBQSVBFTElORSBFIElOR0VTVMODTyBERSBEQURPUyAoQVdTIEUgQVBJKSA%3D)
 >
 > **Para o aluno:** um projeto completo de ponta a ponta no GitHub, o tipo de entrega que toda empresa que vive de projeto compra, e o pitch pronto para vender para o dono.
@@ -207,10 +211,13 @@ Os KPIs são definidos **uma vez** (Metric Views no Unity Catalog) e reusados no
 
 **Motivo:**
 Ao executar o comando de inicialização de um projeto de **_Databricks_** no Git Bash recebo a mensagem de erro: `Error: prompting is not supported. Please specify the path, name or URL of the template to use`.
+
 O terminal do Git Bash (Mintty) não implementa nativamente um TTY interativo para a linguagem em que a CLI do Databricks é compilada. Quando a CLI detecta que a entrada padrão não é interativa, ela aborta o assistente e exige que os valores sejam informados sem dependência do teclado.
+
 O motivo de gerar com o nome padrão my_project ao informar apenas o template (como databricks bundle init default-python) é que a CLI utiliza um arquivo de arquivo de valores padrão (databricks_template_schema.json) quando nenhuma resposta customizada é fornecida.
 
 _Referência_: [Create a custom bundle template](https://docs.databricks.com/gcp/en/dev-tools/bundles/template-tutorial)
+
 **$^*$** Informação fornecida pelo **Gemini** (Outubro/2026)
 
 **b-)** As etapas 1 e 2 só devem ser executadas caso você não tenha nenhuma _**IDE**_ ou o _**Databricks CLI**_ instalados.
@@ -308,7 +315,6 @@ gh repo create
 **9.** Realizar o COMMIT / PUSH inicial
 
 Criei
-
 
 ### 9. Árvore de pastas (diretórios)
 
