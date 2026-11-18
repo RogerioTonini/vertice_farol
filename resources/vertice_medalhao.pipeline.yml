@@ -1,0 +1,14 @@
+resources:
+  pipelines:
+    vertice_medalhao:
+      name: vertice_medalhao
+      # já existe um vertice_medalhao de outro bundle (verticeaovivo) no workspace: convivem os dois
+      allow_duplicate_names: true
+      catalog: ${var.catalog}
+      schema: silver          # a silver é o schema padrão: dentro do pipeline, as tabelas são citadas só pelo nome
+      serverless: true
+      photon: true
+      libraries:
+        - glob:
+            include: ../src/silver/**
+        # o prompt 2 acrescenta: - glob: { include: ../src/gold/** }
