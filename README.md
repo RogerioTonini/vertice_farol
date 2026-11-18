@@ -23,7 +23,8 @@ No final de cada tópico descrevo as diferenças (se houverem) de comandos utili
 
 ### 1. Desafio proposto
 
-> Este projeto foi desenvolvido pela empresa **Jornada de Dados**, sob o título: **IMERSÃO DATABRICKS + CLAUDE CODE: MODELAGEM, DASHBOARD E IA**, no período de **19 a 22 de outubro de 2026**, com duração aproximada de **7:25 hrs**
+> Este projeto foi desenvolvido pela empresa **Jornada de Dados**, sob o título: **IMERSÃO DATABRICKS + CLAUDE CODE: MODELAGEM, DASHBOARD E IA**, no período de **19 a 22 de outubro de 2026**, com duração aproximada de **7:30 hrs**
+>
 > Stacks utilizadas no projeto: **Databricks Free Edition (serverless)**, **SQL**, **Python**, **Lakeflow**, **Unity Catalog**, **AI/BI**, **Genie**, **Apps**, **Lakebase**, **Claude Code**.
 >
 > Ferramentas utilizadas no projeto: **Databricks Free Edition (serverless)**, **Python**, **SQL**, **Claude Code** e **SUPABASE**.
@@ -118,6 +119,7 @@ Medido no dado da Vértice no final do projeto:
 ### 5. Arquitetura
 
 ```mermaid
+%%{init: {'themeVariables': { 'textColor': '#111111', 'nodeTextColor': '#111111', 'titleColor': '#111111' }}}%%
 graph LR
     %% Subgráfico de Fontes
     subgraph FONTES ["FONTES"]
@@ -207,7 +209,7 @@ Os KPIs são definidos **uma vez** (Metric Views no Unity Catalog) e reusados no
 
 **Importante:**
 
-**a-)** As etapas 2 a 5 foram executadas no **_Powershell_**, devido a incompatibilidades do **Windows** e **Git Bash**.
+**a-)** As etapas de 2 a 5 foram executadas no **_Powershell_**, devido a incompatibilidades do **Windows** e **Git Bash**.
 
 **Motivo:**
 Ao executar o comando de inicialização de um projeto de **_Databricks_** no Git Bash recebo a mensagem de erro: `Error: prompting is not supported. Please specify the path, name or URL of the template to use`.
@@ -224,15 +226,15 @@ _Referência_: [Create a custom bundle template](https://docs.databricks.com/gcp
 
 ---
 
-**1.** Instalação/configuração da(s) ferramenta(s) necessária(s) para realização do projeto: [Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install), [Antigravity IDE](https://antigravity.google/product/antigravity-ide/)
+**8.1.** Instalação/configuração da(s) ferramenta(s) necessária(s) para realização do projeto: [Antigravity IDE](https://antigravity.google/product/antigravity-ide/), [Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install).
 
-**2.** Instalação do Databricks CLI.
+**8.2.** Instalação do Databricks CLI.
 
 ```powershell
 PS D:\Git-Projetos> winget install DatabricksCLI
 ```
 
-**3.** Verificando se foi instalado corretamente. O comando é o mesmo tanto para **Powershell** quanto **Git Bash**
+**8.3.** Verificando se foi instalado corretamente. O comando é o mesmo tanto para **Powershell** quanto **Git Bash**
 
 ```powershell
 PS D:\Git-Projetos> databricks --version
@@ -240,7 +242,7 @@ PS D:\Git-Projetos> databricks --version
 
 **Saída:** Deverá ser apresentado a versão. No meu caso: `Databricks CLI v1.22.1`
 
-**4.** Inicializar um novo projeto Databricks local
+**8.4.** Inicializar um novo projeto Databricks local
 
 ```powershell
 PS D:\Git-Projetos> databricks bundle init
@@ -266,7 +268,7 @@ Use a personal schema for each user working on this project
 To get started, refer to the project README.md file and the documentation at https://docs.databricks.com/dev-tools/bundles/index.html.
 ```
 
-**5.** Autenticar no Databricks
+**8.5.** Autenticar no Databricks
 
 ```powershell
 PS D:\Git-Projetos> databricks auth login
@@ -277,7 +279,7 @@ Select a profile
     → Enter a host URL manually
 ```
 
-**6.** Criação do repositório local e remoto
+**8.6.** Criação do repositório local e remoto
 
 A partir desta etapa, executei pelo **_Git Bash_**.
 
@@ -298,25 +300,90 @@ $ gh repo create
 ? Clone the new repository locally? Yes
 ```
 
-**7.** Instalação e configuração do ambiente virtual
+**8.7.** Instalação e configuração do ambiente virtual
 
 ```bash
-uv venv 3.12.10  # Databricks trabalha melhor com a versão 3.12
-uv venv --seed   # Instala todos os pacotes do Databricks
-uv sync          # Faz o download de todas as bibliotecas do python necessárias
+$ uv venv 3.12.10  # Databricks trabalha melhor com a versão 3.12
+$ uv venv --seed   # Instala todos os pacotes do Databricks
+$ uv sync          # Faz o download de todas as bibliotecas do python necessárias
 ```
 
-**8.** Criação do repositório remoto, utilizando o gh
+**8.8.** Realizar o COMMIT / PUSH inicial
+
+Utilizei o script scripts/support/commits_iniciais.sh para este processo.
+
+**8.9.** Instalação das skills
 
 ```bash
-gh repo create
+$ databricks aitools install --agents claude-code --scope project --skills-only --experimental
 ```
 
-**9.** Realizar o COMMIT / PUSH inicial
+### 9. Engenharia de Dados com Claude Code
 
-Criei
+**9.1.** Configurações iniciais
 
-### 9. Árvore de pastas (diretórios)
+```bash
+# Comando para listar os jobs referentes ao projeto
+databricks jobs list --profile DEFAULT                                   # copie o id do job "Ingestão"
+
+# Comando para gerar os arquivos:
+# 1. src/02_ingestao_boto3_gabarito.py
+# 2. File successfully saved to src/01_ingestao_api.py
+#
+databricks bundle generate job --existing-job-id <id> --profile DEFAULT
+```
+
+**9.2.** Gerando o arquivo que contém a chave de acesso e senha do S3
+
+> **Importante:** Gerei este arquivo a partir do script em [Noite 3 · Engenheiro de Dados com Claude Code | Imersão Jornada de Dados](https://github.com/lvgalvao/ImersaoControlTower/tree/main/aulas/aula-03-modelagem-claude-code), item: **1 · O bundle, à mão, com a CLI (5 min, sem Claude Code)**.
+
+```bash
+$ python scripts/python/extrair_chaves_s3.py
+```
+
+**9.3.** Validar se a configuração do seu bundle está correta antes de fazer o deploy
+
+```bash
+$ databricks bundle validate --profile DEFAULT
+
+Name: vertice_farol
+Target: dev
+Workspace:
+  Host: https://dbc-068fb8ed-9845.cloud.databricks.com
+  User: <endereco_e-mail>
+  Path: /Workspace/Users/<endereco_e-mail>/.bundle/vertice_farol/dev
+
+Validation OK!
+Workspace:
+  Host: https://dbc-068fb8ed-9845.cloud.databricks.com
+  User: <endereco_e-mail>
+  Path: /Workspace/Users/<endereco_e-mail>/.bundle/vertice_farol/dev
+```
+
+**9.4.** Publica o bundle no workspace do Databricks: envia o código e cria ou atualiza os recursos definidos nos YAMLs. Diferente do _validate_, **ele altera o workspace**.
+
+```bash
+$ databricks bundle deploy --profile DEFAULT
+```
+
+> **Importante:** Ele _**Não executa nada**_. Ele só deixa os jobs e pipelines prontos no workspace. Para rodar, use:
+>
+> ```bash
+> $ databricks bundle run <nome_do_job> --profile DEFAULT
+> ```
+
+**9.5.** Criação / Cópia de arquivos
+
+**a-)** Copiar o arquivo [bundle-na-mao.md](https://github.com/lvgalvao/ImersaoControlTower/blob/main/aulas/aula-03-modelagem-claude-code/claude-code/prd/bundle-na-mao.md) para a pasta _**llm/prd/**_.
+
+**b-)** copiar o arquivo [CLAUDE.md](https://github.com/lvgalvao/ImersaoControlTower/blob/main/aulas/aula-03-modelagem-claude-code/claude-code/prd/CLAUDE.md) para a pasta _**llm/templates/prd**_.
+
+
+
+
+
+
+### 10. Árvore de pastas (diretórios)
 
 ```
 vertice_farol
@@ -366,18 +433,6 @@ vertice_farol
 ├── ⚙️ pyproject.toml
 └── 📄 uv.lock
 ```
-
-## 🚀 Comece por aqui (5 minutos, sem instalar nada)
-
-1. Crie a conta grátis: [databricks.com/learn/free-edition](https://www.databricks.com/learn/free-edition).
-2. No Databricks: **Workspace → Create → Git folder** → `https://github.com/lvgalvao/ImersaoControlTower`.
-3. Abra `aulas/aula-01-analista-sql/00-carregar-dados` → **Run all**. O catálogo nasce e os dados são gerados direto no volume.
-4. Abra `aulas/aula-01-analista-sql/01-ingestao-bronze.sql` no **SQL Editor** → rode tudo.
-5. Rode o exemplo 05 e depois `aulas/aula-01-analista-sql/99-verificacao.sql`. As 18 linhas devem dar `ok`.
-
-Daí em diante, siga o [README da noite 1](aulas/aula-01-analista-sql/README.md).
-
-### Para as noites 2 a 4 (terminal)
 
 ```bash
 git clone https://github.com/lvgalvao/ImersaoControlTower.git && cd ImersaoControlTower
